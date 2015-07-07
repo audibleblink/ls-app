@@ -12,10 +12,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-nohm.setClient(redis)
-app.use(nohm.connect([{
-  model: Director
-}]))
+redis.on("connect", function() {
+  nohm.setClient(redis)
+  console.log("Nohm Connected to Redis Client")
+  app.use(nohm.connect([{
+    model: Director
+  }]))
+})
 
 app.use('/', routes)
 
