@@ -1,23 +1,44 @@
-var router  = require('express').Router()
-var lsApi   = require('../ls-api')
+var router   = require('express').Router()
+var lsApi    = require('../ls-api')
 var Director = require('../models/director')
-var nohm  = require('nohm').Nohm;
-
+var nohm     = require('nohm').Nohm;
 
 router
-  .get("/directors", function(req, res){
-    Director.find(function(err, ids){
-      res.json({message: ids})
-    })
+  .get("/directors", index)
+  .get("/directors/:id", show)
+  .post("/directors", create)
+  .put("/directors/:id", update)
+
+
+function index(req, res){
+  Director.findAndLoad({}, function(err, directors){
+    if (err) {
+      sendError.apply(this, [500, err])
+    } else {
+      var response = directors.map(function(dir){
+        return dir.allProperties()
+      })
+      res.json(response)
+    }
   })
+}
 
-  .get("/directors/:id", function(req, res){
-
+function show(req, res){
+  Director.findAndLoad({livestream_id: req.params.id}, function(err, items){
+    if (err) {
+      sendError.apply(res, [500, err])
+    } else {
+      res.json(items[0].allProperties())
+    }
   })
+}
 
-  .post("/directors", function(req, res){
-    var lsId = req.body.livestream_id
-    lsApi.get(lsId, function(body){
+function create(req, res){
+  var lsId = req.body.livestream_id
+  lsApi.get(lsId, function(err, body){
+    if (err) {
+      sendError.apply(res, [500, err])
+    } else {
       var data = {
         full_name: body.full_name,
         dob: body.dob,
@@ -29,24 +50,52 @@ router
 
       director.save(function(err){
         if (err === "invalid") {
-          res.status(400)
-          res.json({message: "invalid properties", data: director.errors})
+          sendError.apply(res, [400, director.errors])
         } else if (err) {
-          console.log(err)
+          sendError.apply(res, [500, err])
         } else {
           res.json(director.allProperties())
         }
       })
-
-    })
+    }
   })
+}
 
-  .put("/directors/:id", function(req, res){
+function update (req, res){
+  Director.findAndLoad({livestream_id: req.params.id}, function(err, items){
+    if (err) {
+      sendError.apply(res, [500, err])
+    } else {
+      var director = items[0]
+      var attributes = allowedParams(req.body)
+      director.p(attributes)
 
+      director.save(function(err){
+        if (err === "invalid") {
+          sendError.apply(res, [400, director.errors])
+        } else if (err) {
+          sendError.apply(res, [500, err])
+        } else {
+          res.json(director.allProperties())
+        }
+      })
+    }
   })
+}
 
-  .delete("/directors/:id", function(req, res){
 
-  })
+function sendError(status, msg) {
+  this.status(status)
+  this.json({error: msg})
+}
+
+function allowedParams(attributes) {
+  return {
+    favorite_camera: attributes.favorite_camera,
+    favorite_movies: attributes.favorite_movies
+  }
+}
+
+
 
 module.exports = router
