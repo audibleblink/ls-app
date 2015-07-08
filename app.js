@@ -2,6 +2,8 @@ var app          = require('express')()
 var cookieParser = require('cookie-parser')
 var bodyParser   = require('body-parser')
 var routes       = require('./routes/director-routes.js')
+var authCtrl = require('./controllers/auth-controller.js')
+
 
 var Director = require('./models/director')
 var nohm     = require('nohm').Nohm;
@@ -10,6 +12,9 @@ var redis    = require('redis').createClient();
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cookieParser())
+app.use(authCtrl.put)
+app.use('/', routes)
+
 
 redis.on("connect", function() {
   nohm.setClient(redis)
@@ -19,6 +24,5 @@ redis.on("connect", function() {
   }]))
 })
 
-app.use('/', routes)
 
 module.exports = app

@@ -1,15 +1,14 @@
 var lsApi    = require('../lib/ls-api')
 var Director = require('../models/director')
 var nohm     = require('nohm').Nohm
-var md5      = require('md5')
+var md5      = require('MD5')
 
 
 module.exports = {
   index: index,
   show: show,
   create: create,
-  update: update,
-  authorize: authorize
+  update: update
 }
 
 function index(req, res){
@@ -65,41 +64,28 @@ function create(req, res){
   })
 }
 
-function authorize(req, res, next){
-  var token = req.headers.authorization
-  if (!token) {
-    sendError.apply(res, [401, "Unauthorized"])
-  } else {
 
-    Director.findAndLoad({livestream_id: req.params.id}, function(err, items){
-      if (err === 'not found') {
-        sendError.apply(res, [400, err])
-      } else if (err) {
-        sendError.apply(res, [500, err])
-      } else {
-        var director = items[0]
-        if (validToken(token, director)) {
-          next(director)
-        } else {
-          sendError.apply(res, [401, "Unauthorized"])
-        }
-      }
-    })
-
-  }
-}
-
-function update(director, req, res, next) {
-  var attributes = allowedParams(req.body)
-  director.p(attributes)
-
-  director.save(function(err){
-    if (err === "invalid") {
-      sendError.apply(res, [400, director.errors])
+function update(req, res, next) {
+  Director.findAndLoad({livestream_id: req.params.id}, function(err, items){
+    if (err === 'not found') {
+      sendError.apply(res, [400, err])
     } else if (err) {
       sendError.apply(res, [500, err])
     } else {
-      res.json(director.allProperties())
+      var director = items[0]
+      var attributes = allowedParams(req.body)
+
+      director.p(attributes)
+
+      director.save(function(err){
+        if (err === "invalid") {
+          sendError.apply(res, [400, director.errors])
+        } else if (err) {
+          sendError.apply(res, [500, err])
+        } else {
+          res.json(director.allProperties())
+        }
+      })
     }
   })
 }
@@ -108,11 +94,6 @@ function update(director, req, res, next) {
 function sendError(status, msg) {
   this.status(status)
   this.json({error: msg})
-}
-
-function validToken(token, instance) {
-  var hash = token.split(" ")[1]
-  return hash === md5(instance.allProperties().full_name)
 }
 
 function allowedParams(attributes) {
