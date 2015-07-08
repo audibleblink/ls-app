@@ -1,7 +1,7 @@
-var lsApi    = require('../lib/ls-api')
-var Director = require('../models/director')
-var nohm     = require('nohm').Nohm
-var md5      = require('MD5')
+var livestream = require('stream-api-wrapper')
+var Director   = require('../models/director')
+var nohm       = require('nohm').Nohm
+var md5        = require('MD5')
 
 
 module.exports = {
@@ -38,7 +38,7 @@ function show(req, res){
 
 function create(req, res){
   var lsId = req.body.livestream_id
-  lsApi.get(lsId, function(err, body){
+  livestream.account(lsId, function(err, body){
     if (err) {
       sendError.apply(res, [500, err])
     } else {
