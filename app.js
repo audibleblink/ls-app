@@ -1,11 +1,11 @@
-var app      = require('express')()
+var app          = require('express')()
 var cookieParser = require('cookie-parser')
 var bodyParser   = require('body-parser')
-var routes       = require('./routes/directors.js')
+var routes       = require('./routes/director-routes.js')
 
 var Director = require('./models/director')
-var nohm  = require('nohm').Nohm;
-var redis = require('redis').createClient();
+var nohm     = require('nohm').Nohm;
+var redis    = require('redis').createClient();
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
