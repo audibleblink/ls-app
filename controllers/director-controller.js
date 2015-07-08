@@ -1,4 +1,4 @@
-var lsApi    = require('../ls-api')
+var lsApi    = require('../lib/ls-api')
 var Director = require('../models/director')
 var nohm     = require('nohm').Nohm;
 
