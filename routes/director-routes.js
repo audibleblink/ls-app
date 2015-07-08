@@ -5,6 +5,6 @@ router
   .get("/directors", directorCtrl.index)
   .get("/directors/:id", directorCtrl.show)
   .post("/directors", directorCtrl.create)
-  .put("/directors/:id", directorCtrl.update)
+  .put("/directors/:id", directorCtrl.authorize, directorCtrl.update)
 
 module.exports = router
