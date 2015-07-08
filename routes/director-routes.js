@@ -1,4 +1,4 @@
-var router   = require('express').Router()
+var router       = require('express').Router()
 var directorCtrl = require('../controllers/director-controller')
 
 router

@@ -1,6 +1,8 @@
-var lsApi    = require('../ls-api')
-var Director = require('../models/director')
-var nohm     = require('nohm').Nohm;
+var livestream = require('stream-api-wrapper')
+var Director   = require('../models/director')
+var nohm       = require('nohm').Nohm
+var md5        = require('MD5')
+
 
 module.exports = {
   index: index,
@@ -36,7 +38,7 @@ function show(req, res){
 
 function create(req, res){
   var lsId = req.body.livestream_id
-  lsApi.get(lsId, function(err, body){
+  livestream.account(lsId, function(err, body){
     if (err) {
       sendError.apply(res, [500, err])
     } else {
@@ -62,13 +64,17 @@ function create(req, res){
   })
 }
 
-function update (req, res){
+
+function update(req, res, next) {
   Director.findAndLoad({livestream_id: req.params.id}, function(err, items){
-    if (err) {
+    if (err === 'not found') {
+      sendError.apply(res, [400, err])
+    } else if (err) {
       sendError.apply(res, [500, err])
     } else {
       var director = items[0]
       var attributes = allowedParams(req.body)
+
       director.p(attributes)
 
       director.save(function(err){

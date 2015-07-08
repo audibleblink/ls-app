@@ -17,10 +17,10 @@ module.exports = nohm.model('Director', {
     },
     favorite_camera: {
       type: 'string',
-      defaultValue: 'Red'
+      defaultValue: 'RED'
     },
     favorite_movies: {
-      type: 'array',
+      type: 'json',
       defaultValue: ["Terminator", "Kingsmen"]
     },
     livestream_id: {
