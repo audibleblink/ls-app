@@ -83,12 +83,6 @@ function update(req, res, next) {
   })
 }
 
-
-function sendError(status, msg) {
-  this.status(status)
-  this.json({error: msg})
-}
-
 function allowedParams(attributes) {
   return {
     favorite_camera: attributes.favorite_camera,
