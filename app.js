@@ -9,6 +9,8 @@ var redis    = require('redis').createClient();
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+
+// Introduce middleware to protect our PUT route
 app.use(authCtrl.put)
 app.use('/', routes)
 

@@ -12,10 +12,11 @@ module.exports = {
   update: update
 }
 
+// GET /dircetors
 function index(req, res){
   Director.findAndLoad({}, function(err, directors){
     if (err) {
-      e.handle(res, err)
+      e.handle.call(res, err)
     } else {
       var response = directors.map(function(dir){
         return dir.allProperties()
@@ -25,21 +26,23 @@ function index(req, res){
   })
 }
 
+// GET /directors/:id
 function show(req, res){
   Director.findAndLoad({livestream_id: req.params.id}, function(err, items){
     if (err) {
-      e.handle(res, err)
+      e.handle.call(res, err)
     } else {
       res.json(items[0].allProperties())
     }
   })
 }
 
+// POST /directors
 function create(req, res){
   var lsId = req.body.livestream_id
   livestream.account(lsId, function(err, body){
     if (err) {
-      e.handle(res, err)
+      e.handle.call(res, err)
     } else {
       var data = {
         full_name: body.full_name,
@@ -52,7 +55,7 @@ function create(req, res){
 
       director.save(function(err){
         if (err) {
-          e.handle(res, err, director.errors)
+          e.handle.apply(res, [err, director.errors])
         } else {
           res.json(director.allProperties())
         }
@@ -61,20 +64,20 @@ function create(req, res){
   })
 }
 
-
+// PUT /directors
 function update(req, res, next) {
   Director.findAndLoad({livestream_id: req.params.id}, function(err, items){
     if (err) {
-      e.handle(res, err)
+      e.handle.call(res, err)
     } else {
       var director = items[0]
-      var attributes = allowedParams(req.body)
+      var attributes = permittedParams(req.body)
 
       director.p(attributes)
 
       director.save(function(err){
         if (err === "invalid") {
-          e.handle(res, err, direcor.errors)
+          e.handle.apply(res, [err, direcor.errors])
         } else {
           res.json(director.allProperties())
         }
@@ -83,7 +86,8 @@ function update(req, res, next) {
   })
 }
 
-function allowedParams(attributes) {
+// Sanitizes incoming parameters
+function permittedParams(attributes) {
   return {
     favorite_camera: attributes.favorite_camera,
     favorite_movies: attributes.favorite_movies
