@@ -1,8 +1,8 @@
 var app        = require('express')();
-var routes     = require('./routes/director-routes.js');
+var routes     = require('./routes/director-routes');
 var bodyParser = require('body-parser');
 
-var authCtrl = require('./controllers/auth-controller.js');
+var authCtrl = require('./lib/authorizations');
 var Director = require('./models/director');
 var nohm     = require('nohm').Nohm;
 var redis    = require('redis').createClient();
