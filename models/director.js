@@ -32,4 +32,4 @@ module.exports = nohm.model('Director', {
   methods: {
   }
 
-})
+});
