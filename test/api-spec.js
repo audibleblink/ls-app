@@ -82,10 +82,17 @@ describe("App", function(){
         });
     });
 
-    it("returns 401 with auth failure", function(done){
+    it("returns 401 with auth failure when no header given", function(done){
       api.put("/directors/6488824")
         .expect(401, done);
     });
+
+    it("returns 401 with auth failure when invalid header given", function(done){
+      api.put("/directors/6488824")
+        .set('authorization', "123")
+        .expect(401, done);
+    });
+
 
   });
 
