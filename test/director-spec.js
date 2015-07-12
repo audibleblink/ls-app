@@ -30,4 +30,4 @@ redis.on("connect", function(){
     });
 
   });
-})
+});

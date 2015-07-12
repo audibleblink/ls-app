@@ -1,7 +1,6 @@
 var nohm = require('nohm').Nohm;
 var md5  = require('MD5');
 
-
 module.exports = nohm.model('Director', {
 
   properties: {
