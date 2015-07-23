@@ -2,7 +2,7 @@
 
 ## Description
 
-An API for logging directors and their favorite things! Directors must have a Livestream account to be registered on this API.
+An API for logging directors and their favorite things! Directors must have a Livestream account to be registered on this API. Made as a coding challenge for Livestream.
 
 ## Table of Contents
 
