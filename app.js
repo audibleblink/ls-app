@@ -4,8 +4,11 @@ var bodyParser = require('body-parser');
 var authorize  = require('./lib/authorization');
 var Director   = require('./models/director');
 var nohm       = require('nohm').Nohm;
-var redis      = require('redis').createClient();
-
+var redis      = require('redis').createClient(
+  process.env.DB_PORT_6379_TCP_PORT,
+  process.env.DB_PORT_6379_TCP_ADDR,
+  {}
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

@@ -1,0 +1,10 @@
+web:
+  image: livestream:0.1.0
+  build: .
+  ports:
+   - "5000:5000"
+  links:
+   - redis
+  command: "cd src; npm install; npm start"
+redis:
+  image: redis
