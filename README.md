@@ -2,7 +2,7 @@
 
 ## Description
 
-An API for logging directors and their favorite things! Directors must have a Livestream account to be registered on this API.
+An API for logging directors and their favorite things! Directors must have a Livestream account to be registered on this API. Made as a coding challenge for Livestream.
 
 ## Table of Contents
 
@@ -175,6 +175,6 @@ mocha -w
 | `server.js`          | Configures the web server. Run `node server.js` or `npm start` to start it   |
 | `routes/director-routes.js`         | Contains the endpoint defenition       |
 | `controllers/director-controller.js`          | Contains the routing logic   |
-| `controllers/auth-controller.js`          | Used as middleware for handling requests to the PUT route  |
+| `lib/authorization.js`          | Used as middleware for handling requests to the PUT route  |
 | `models/director.js`          | Define our `Director` resource   |
 | `lib/error-handler.js`          | Contains error-handling logic used throughout the application   |

@@ -1,4 +1,5 @@
-var nohm  = require('nohm').Nohm;
+var nohm = require('nohm').Nohm;
+var md5  = require('MD5');
 
 module.exports = nohm.model('Director', {
 
@@ -30,6 +31,9 @@ module.exports = nohm.model('Director', {
   },
 
   methods: {
+    validToken: function(token) {
+      return md5(this.allProperties().full_name) === token;
+    }
   }
 
 });
